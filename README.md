@@ -2,4 +2,6 @@
 
 > A introduction about Redux
 
-http://chentsulin.github.io/redux-demo
+中文 Redux 簡介
+
+http://chentsulin.github.io/redux-intro
