@@ -1,0 +1,439 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>Redux Demo</title>
+
+		<meta name="description" content="Redux Demo">
+		<meta name="author" content="C. T. Lin">
+
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/black.css" id="theme">
+
+		<!-- Code syntax highlighting -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+				<section data-background="#b5533c">
+					<h1>Redux</h1>
+					<h3>predictable state container</h3>
+					<p>
+						<small><a href="https://github.com/chentsulin">C. T. Lin</a></small>
+					</p>
+				</section>
+
+				<section data-transition="slide" data-background="#4d7e65">
+					<section>
+						<h2>Redux 優點</h2>
+						<ol>
+							<li>所有東西 (Stores, Action Creators, config) 都可以 hot reload</li>
+							<li>防止一些常見 anti-patterns</li>
+							<li>容易做 universal，沒用到 sigleton 而且資料可以 rehydrated</li>
+							<li>可以用任何形式保存資料：JS objects, arrays, ImmutableJS..</li>
+							<li>簡化至一個 Store，不用思考個別 Store</li>
+							<li>提供 redux-devtools Time travel 功能跟容易實作其他功能的介面</li>
+							<li>可以用 middleware 擴充 dispatch</li>
+							<li>不用 mock 就很容易測試</li>
+						</ol>
+					</section>
+					<section>
+						<p>而且他的 API 很少，核心只有 createStore 的 150 行程式碼</p>
+						<img src="img/source.png">
+					</section>
+					<section>
+						<h2>容易學、好擴充</h2>
+					</section>
+				</section>
+
+				<section data-transition="slide" data-background="#b5533c">
+					<section>
+						<h2>Action</h2>
+						<p>只是個普通的 js object</p>
+						<pre><code>
+{
+  type: SEND_MESSAGE,
+  payload: {
+    text: 'Hello world'
+  }
+}
+						</code></pre>
+					</section>
+					<section>
+						<h2>Flux Standard Action</h2>
+						<p><a href="" target="_blank">Flux Standard Action</a> 有一個普遍的 action 定義，<br>包括 meta, error 等欄位</p>
+					</section>
+				</section>
+
+				<section data-transition="slide" data-background="#4d7e65">
+					<section>
+						<h2>Action Creators</h2>
+						<p>通常寫在 Actions 或 ActionCreators 命名的檔案中</p>
+						<p>小心盡量不要跟 Action 搞混</p>
+					</section>
+					<section data-markdown>
+						<script type="text/template">
+						一個普通的 Action Creator，<br>就是製造 Action 的 pure function
+
+						```
+function sendMessage(text) {
+  return {
+    type: SEND_MESSAGE,
+    payload: {
+      text
+    }
+  };
+}
+						```
+						</script>
+					</section>
+					<section data-markdown>
+						<script type="text/template">
+						這樣的 pure function 很好測試
+
+						```
+expect(sendMessage('Hello')).to.deep.equal({
+	type: SEND_MESSAGE,
+    payload: {
+      text: 'Hello'
+    });
+});
+						```
+						</script>
+					</section>
+					<section data-markdown>
+						<script type="text/template">
+						實際 dispatch action
+
+						```
+						dispatch(sendMessage('Hello'));
+						```
+						</script>
+					</section>
+					<section>
+						<p>使用 thunkMiddleware, PromiseMiddleware 後，<br>就可以延伸的 ActionCreator 的功能，<br>這邊先不做敘述</p>
+					</section>
+				</section>
+
+				<section data-transition="slide" data-background="#b5533c">
+					<section>
+						<h2>Reducer</h2>
+						<p>給 store 初始的 state，並根據收到的 action 回傳新的 state</p>
+						<p>就像是原本的 store 的一部分工作</p>
+					</section>
+					<section>
+						<p><code>(previousState, action) => newState</code></p>
+						<p>每次收到 dispatch 的 action 就會觸發，根據原本的 previousState，來回傳新的 newState</p>
+						<p>這樣的 functional 的做法，可以更簡潔的表達如何變更 state</p>
+					</section>
+					<section data-markdown>
+						<script type="text/template">
+						這是個 no side effect 的 function，<br>不要去改 previousState，<br>會害 time travel 等需要前面 state 的功能壞掉
+
+						```
+const initialState = { message: '' };
+
+function messageReducer(state = initialState, action) {
+  switch (action.type) {
+    case SEND_MESSAGE:
+      return {
+        message: action.text
+      };
+    default:
+      return state;
+  }
+}
+						```
+						</script>
+					</section>
+
+					<section>
+						<p style="text-align: left">在一開始的時候 Redux 會先<br> dispatch 一個<code>@@redux/INIT</code> action 來初始化 state，<br><code>@@namespace/EVENT_NAME</code> 是<br>目前 private event 的命名規範，<br>不要試圖去聽這些 event</p>
+					</section>
+				</section>
+
+
+				<section data-transition="slide" data-background="#4d7e65">
+					<section>
+						<h2>Store</h2>
+						<p>應用程式保存 state 的地方，Redux 只有一個</p>
+					</section>
+					<section data-markdown>
+						<script type="text/template">
+`createStore` 的方式是把 reducer 傳進去
+
+```
+import { createStore } from 'redux';
+import messageReducer from '../reducers/messages';
+const store = createStore(messageReducer);
+```
+						</script>
+					</section>
+					<section data-markdown>
+						<script type="text/template">
+實際會有很多不同資料的 reducer，所以需要用 `combineReducers` 來結合他們
+
+```
+import { createStore, combineReducers } from 'redux';
+import * as reducers from '../reducers';
+const reducer = combineReducers(reducers);
+const store = createStore(reducer);
+```
+						</script>
+					</section>
+					<section data-markdown>
+						<script type="text/template">
+## dispatch
+
+這是比較 Low-level 的 API，不過還是值得一提，dispatch 其實長在 store 上。
+
+雖然大部份時候並不會直接這樣寫。
+
+```
+store.dispatch(sendMessage('Hello'));
+```
+						</script>
+					</section>
+					<section data-markdown>
+						<script type="text/template">
+## getState
+
+可以取得 store 現在的 state。
+
+```
+store.getState();
+```
+						</script>
+					</section>
+				</section>
+
+				<section data-transition="slide" data-background="#b5533c">
+					<section>
+						<h2>Middleware</h2>
+						<p>用來延伸 dispatch 的功能</p>
+					</section>
+					<section data-markdown>
+						<script type="text/template">
+可以使用 `applyMiddleware` util
+
+```
+import { createStore, applyMiddleware } from 'redux';
+
+const store =
+applyMiddleware(promise, thunk, observable)(createStore)(reducer);
+```
+						</script>
+					</section>
+					<section>
+						<p><code>dispatch => dispatch'</code></p>
+						<p>讓 dispatch 經過一個個的 middleware decorate</p>
+						<pre><code>
+const store =
+applyMiddleware(promise, thunk, observable)(createStore)(reducer);
+// store.dispatch => promise(thunk(observable(store.dispatch)));
+						</code></pre>
+					</section>
+					<section data-markdown>
+						<script type="text/template">
+[gaearon/redux-thunk](https://github.com/gaearon/redux-thunk) 這個 middleware
+
+可以讓 store dispatch thunk
+
+```
+function sendMessageAsync(message) {
+  return dispatch => {
+    setTimeout(() => {
+      dispatch(sendMessage(message));
+    }, 1000);
+  };
+}
+```
+						</script>
+					</section>
+					<section data-markdown>
+						<script type="text/template">
+[acdlite/redux-promise](https://github.com/acdlite/redux-promise) 這個 middleware
+
+可以讓 store dispatch promise
+
+```
+function sendMessageAsync(message) {
+  return dispatch => {
+      dispatch(new Promise(resolve, reject) {
+      	setTimeout(() => {
+        	resolve(sendMessage(message))
+      	}, 1000);
+      });
+  };
+}
+```
+						</script>
+					</section>
+				</section>
+
+				<section data-transition="slide" data-background="#4d7e65">
+					<section>
+						<h2>View</h2>
+						<p>Redux 本身並不依賴特定 view layer，<br>所以可以跟任何 view layer 去結合</p>
+					</section>
+					<section>
+						<p><a href="https://github.com/gaearon/react-redux" target="_blank">react-redux</a> 就是 react 跟 redux 的介接</p>
+					</section>
+					<section>
+						<p>他提供兩個 component：</p>
+						<ul>
+							<li>Provider</li>
+							<li>Connector</li>
+						</ul>
+						<p>還有對應的 decorator：</p>
+						<ul>
+							<li>@provide</li>
+							<li>@connect</li>
+						</ul>
+					</section>
+					<section>
+						<p>不過...</p>
+						<img src="img/react-redux.png">
+					</section>
+				</section>
+
+
+				<section data-transition="slide" data-background="#b5533c">
+					<section>
+						<p>Provider</p>
+					</section>
+					<section data-markdown>
+						<script type="text/template">
+Provider 用來在 RootComponent 外再包一層，並把 store 用 react context 傳下去：
+
+```
+<Provider store={store}>
+  {() => <MyRootComponent>}
+</Provider>
+
+// 現在 child 需要是 function 是對 React 0.13 的 workaround
+```
+						</script>
+					</section>
+				</section>
+
+				<section data-transition="slide" data-background="#4d7e65">
+					<section>
+						<p>connect</p>
+					</section>
+					<section data-markdown>
+						<script type="text/template">
+connect 用來把特定的 state 從 context 裡的 store select 出來，把 event listener 等等自動處理好，並把 dispatch 當 props 傳下去：
+
+```
+@connect(state => ({
+  user: state.user
+}))
+class MySmartComponent extends React.Component {
+
+	render() {
+    	const { dispatch, user } = this.props;
+		//..
+	}
+}
+```
+						</script>
+					</section>
+				</section>
+
+				<section data-transition="slide" data-background="#b5533c">
+					<section>
+						<p>bindActionCreators</p>
+						<p>Redux 還有一個可以方便去使用 ActionCreator 的 util</p>
+					</section>
+					<section data-markdown>
+						<script type="text/template">
+connect 用來把特定的 state 從 context 裡的 store select 出來，把 event listener 等等自動處理好，並把 dispatch 當 props 傳下去：
+
+```
+import { bindActionCreators } from 'redux';
+
+@connect(state => ({
+  user: state.user
+}))
+class MySmartComponent extends React.Component {
+
+	render() {
+    	const { dispatch, user } = this.props;
+    	const actions = bindActionCreators(UserActions, dispatch);
+		return (
+			<MyDumbComponent user={user} {...actions}>
+				{this.props.children}
+			</MyDumbComponent>
+		);
+	}
+}
+```
+						</script>
+					</section>
+				</section>
+
+				<section data-transition="slide" data-background="#4d7e65" style="text-align: left;">
+					<h1>THE END</h1>
+					<p>Thanks for listening</p>
+				</section>
+
+			</div>
+
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+
+		<script>
+
+			// Full list of configuration options available at:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+
+				transition: 'slide', // none/fade/slide/convex/concave/zoom
+
+				// Optional reveal.js plugins
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, condition: function() { return !!document.querySelector( 'pre code' ); }, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true },
+					{ src: 'plugin/notes/notes.js', async: true }
+				]
+			});
+
+		</script>
+
+	</body>
+</html>
