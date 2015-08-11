@@ -344,7 +344,7 @@ Provider 用來在 RootComponent 外再包一層，並把 store 用 react contex
 
 				<section data-transition="slide" data-background="#4d7e65">
 					<section>
-						<p>connect</p>
+						<p>connect (react-redux v0.2.2)</p>
 					</section>
 					<section data-markdown>
 						<script type="text/template">
@@ -373,7 +373,7 @@ class MySmartComponent extends React.Component {
 					</section>
 					<section data-markdown>
 						<script type="text/template">
-connect 用來把特定的 state 從 context 裡的 store select 出來，把 event listener 等等自動處理好，並把 dispatch 當 props 傳下去：
+把 dispatch 包進去：
 
 ```
 import { bindActionCreators } from 'redux';
@@ -394,6 +394,128 @@ class MySmartComponent extends React.Component {
 	}
 }
 ```
+						</script>
+					</section>
+				</section>
+
+				<section data-transition="slide" data-background="#4d7e65">
+					<section>
+						<p>connect (react-redux v0.8.0)</p>
+					</section>
+					<section data-markdown>
+						<script type="text/template">
+v0.8.0 的 connect 不需要再寫一個 Component，
+
+只要把要傳怎樣的 props 給搞定，
+
+他會自動幫你包進 Connect Component
+
+```
+function mapStateToProps(state) {
+  return {
+    user: state.user
+  };
+}
+
+export default connect(mapStateToProps)(MyDumbComponent)
+```
+
+更簡單了！
+						</script>
+					</section>
+					<section data-markdown>
+						<script type="text/template">
+`connect` 現在有三個可選參數：`mapStateToProps`, `mapDispatchToProps`, `mergeProps`
+
+- mapStateToProps: 跟之前一樣，把 store state 的特定部分當成 props
+- mapDispatchToProps: 把 dispatch 傳進去也變成 props，通常用來把 actionCreators 傳下去
+- mergeProps: 可以指定 stateProps, dispatchProps, parentProps 的合併方式
+
+預設是這樣：
+
+```
+const defaultMergeProps = (stateProps, dispatchProps, parentProps) => ({
+  ...parentProps,
+  ...stateProps,
+  ...dispatchProps
+});
+```
+						</script>
+					</section>
+					<section data-markdown>
+						<script type="text/template">
+也傳遞包 dispatch 的 actionCreator props 下去：
+
+```
+function mapStateToProps(state) {
+  return {
+    user: state.user
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    onSendMessage: () => dispatch(sendMessage())
+  };
+}
+
+export default connect(
+	mapStateToProps,
+	mapDispatchToProps
+)(MyDumbComponent)
+```
+						</script>
+					</section>
+					<section data-markdown>
+						<script type="text/template">
+最後一個：
+
+```
+
+function mergeProps(stateProps, dispatchProps, parentProps) {
+  return {
+	...stateProps,
+	...dispatchProps,
+	...parentProps
+  }
+}
+
+export default connect(
+	mapStateToProps,
+	mapDispatchToProps,
+	mergeProps
+)(MyDumbComponent)
+```
+
+這樣就可以讓 parentProps 蓋掉其他兩個
+						</script>
+					</section>
+				</section>
+
+				<section data-transition="slide" data-background="#b5533c">
+					<section>
+						<p>v0.8.0 也可以 bindActionCreators</p>
+					</section>
+					<section data-markdown>
+						<script type="text/template">
+```
+function mapStateToProps(state) {
+  return {
+    user: state.user
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators(UserActions, dispatch);
+}
+
+export default connect(
+	mapStateToProps,
+	mapDispatchToProps
+)(MyDumbComponent)
+```
+
+跟以前用法幾乎一樣！
 						</script>
 					</section>
 				</section>
