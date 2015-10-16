@@ -4,7 +4,7 @@
 	<head>
 		<meta charset="utf-8">
 
-		<title>Redux Intro</title>
+		<title>React Intro</title>
 
 		<meta name="description" content="Redux Intro">
 		<meta name="author" content="C. T. Lin">
@@ -41,483 +41,128 @@
 			<!-- Any section element inside of this container is displayed as a slide -->
 			<div class="slides">
 				<section data-background="#b5533c">
-					<h1>Redux</h1>
-					<h3>predictable state container</h3>
+					<h1>Why React</h1>
+					<h3>is taking over the world...wide web</h3>
 					<p>
-						<small><a href="https://github.com/chentsulin">C. T. Lin</a></small>
+						<small><a href="https://github.com/chentsulin">Hsin Hsiao</a></small>
 					</p>
 				</section>
 
 				<section data-transition="slide" data-background="#4d7e65">
 					<section>
-						<h2>Redux 優點</h2>
-						<ol>
-							<li>所有東西 (Stores, Action Creators, config) 都可以 hot reload</li>
-							<li>防止一些常見 anti-patterns</li>
-							<li>容易做 universal，沒用到 sigleton 而且資料可以 rehydrated</li>
-							<li>可以用任何形式保存資料：JS objects, arrays, ImmutableJS..</li>
-							<li>簡化至一個 Store，不用思考個別 Store</li>
-							<li>提供 redux-devtools Time travel 功能跟容易實作其他功能的介面</li>
-							<li>可以用 middleware 擴充 dispatch</li>
-							<li>不用 mock 就很容易測試</li>
-						</ol>
+						<h2>Created by Facebook</h2>
 					</section>
 					<section>
-						<p>而且他的 API 很少，核心只有 createStore 的 150 行程式碼</p>
-						<img src="img/source.png">
+						<p>Used by Paypal, Stripe, WeWork, AirBnb, Netflix...etc</p>
 					</section>
 					<section>
-						<h2>容易學、好擴充</h2>
+						<h2>LOTS OF JOBS coming up</h2>
 					</section>
 				</section>
 
 				<section data-transition="slide" data-background="#b5533c">
 					<section>
-						<h2>Action</h2>
-						<p>只是個普通的 js object</p>
+						<h2>EASY TO START</h2>
+						<p>From a single widget to the entire App</p>
 						<pre><code>
-{
-  type: SEND_MESSAGE,
-  payload: {
-    text: 'Hello world'
-  }
-}
+<ReactComponent> 
+	I am so easy to use!
+</ReactComponent>
 						</code></pre>
 					</section>
 					<section>
-						<h2>Flux Standard Action</h2>
-						<p><a href="" target="_blank">Flux Standard Action</a> 有一個普遍的 action 定義，<br>包括 meta, error 等欄位</p>
+						<h2>WORKS WELL WITH RAILS, NODE & WHATEVER YOU HAVE</h2>
+						<p>No JQuery, please</p>
+					</section>
+					<section>
+						<h2>IF YOU MUST</h2>
+						<p>Works with JQuery too</p>
 					</section>
 				</section>
 
 				<section data-transition="slide" data-background="#4d7e65">
 					<section>
-						<h2>Action Creators</h2>
-						<p>通常寫在 Actions 或 ActionCreators 命名的檔案中</p>
-						<p>小心盡量不要跟 Action 搞混</p>
-					</section>
-					<section data-markdown>
-						<script type="text/template">
-						一個普通的 Action Creator，<br>就是製造 Action 的 pure function
-
-						```
-function sendMessage(text) {
-  return {
-    type: SEND_MESSAGE,
-    payload: {
-      text
-    }
-  };
-}
-						```
-						</script>
-					</section>
-					<section data-markdown>
-						<script type="text/template">
-						這樣的 pure function 很好測試
-
-						```
-expect(sendMessage('Hello')).to.deep.equal({
-	type: SEND_MESSAGE,
-    payload: {
-      text: 'Hello'
-    });
-});
-						```
-						</script>
-					</section>
-					<section data-markdown>
-						<script type="text/template">
-						實際 dispatch action
-
-						```
-						dispatch(sendMessage('Hello'));
-						```
-						</script>
+						<h2>MAKE UI SIMPLE </h2>
+						<p>Reduce mental load </p>
+						<p>Build more faster</p>
 					</section>
 					<section>
-						<p>使用 thunkMiddleware, PromiseMiddleware 後，<br>就可以延伸的 ActionCreator 的功能，<br>這邊先不做敘述</p>
+						<h2>PINNED TO BOTTOM IN CHAT </h2>
+						<p>Easy </p>
+						<p>Scalable </p>
 					</section>
+					<section>
+						<h2>LOAD PHOTOS IN VIEW </h2>
+						<p>Easy </p>
+						<p>Scalable </p>
+					</section>	
+					<section>
+						<h2>GOOGLE CALENDAR </h2>
+						<p>Easy </p>
+						<p>Scalable </p>
+					</section>				
+					
 				</section>
 
 				<section data-transition="slide" data-background="#b5533c">
 					<section>
-						<h2>Reducer</h2>
-						<p>給 store 初始的 state，並根據收到的 action 回傳新的 state</p>
-						<p>就像是原本的 store 的一部分工作</p>
+						<h2>UNIVERSAL RENDERING </h2>
+						<p>Fast beyond you're used to </p>
+						<p>Only React has it</p>
 					</section>
 					<section>
-						<p><code>(previousState, action) => newState</code></p>
-						<p>每次收到 dispatch 的 action 就會觸發，根據原本的 previousState，來回傳新的 newState</p>
-						<p>這樣的 functional 的做法，可以更簡潔的表達如何變更 state</p>
+						<h2>USE SAME CODE ON <br> SERVER & CLIENT </h2>
+						<p>Avaiable only in Javascript (Node) </p>
+						<p>Pending solutions in Rails </p>
 					</section>
-					<section data-markdown>
-						<script type="text/template">
-						這是個 no side effect 的 function，<br>不要去改 previousState，<br>會害 time travel 等需要前面 state 的功能壞掉
-
-						```
-const initialState = { message: '' };
-
-function messageReducer(state = initialState, action) {
-  switch (action.type) {
-    case SEND_MESSAGE:
-      return {
-        message: action.text
-      };
-    default:
-      return state;
-  }
-}
-						```
-						</script>
-					</section>
-
 					<section>
-						<p style="text-align: left">在一開始的時候 Redux 會先<br> dispatch 一個<code>@@redux/INIT</code> action 來初始化 state，<br><code>@@namespace/EVENT_NAME</code> 是<br>目前 private event 的命名規範，<br>不要試圖去聽這些 event</p>
-					</section>
+						<h2>SERVER SIDE GOODIES </h2>
+						<p>SEO </p>
+						<p>Fast Inital Render </p>
+						<p>Client code smooth takeover </p>
+					</section>	
 				</section>
 
 
 				<section data-transition="slide" data-background="#4d7e65">
 					<section>
-						<h2>Store</h2>
-						<p>應用程式保存 state 的地方，Redux 只有一個</p>
+						<h2>TRUE FULL STACKER</h2>
+						<p>Web </p>
+						<p>iOS </p>
+						<p>Android </p>
+						<p>Desktop </p>
+						<p>...more </p>
 					</section>
-					<section data-markdown>
-						<script type="text/template">
-`createStore` 的方式是把 reducer 傳進去
-
-```
-import { createStore } from 'redux';
-import messageReducer from '../reducers/messages';
-const store = createStore(messageReducer);
-```
-						</script>
-					</section>
-					<section data-markdown>
-						<script type="text/template">
-實際會有很多不同資料的 reducer，所以需要用 `combineReducers` 來結合他們
-
-```
-import { createStore, combineReducers } from 'redux';
-import * as reducers from '../reducers';
-const reducer = combineReducers(reducers);
-const store = createStore(reducer);
-```
-						</script>
-					</section>
-					<section data-markdown>
-						<script type="text/template">
-## dispatch
-
-這是比較 Low-level 的 API，不過還是值得一提，dispatch 其實長在 store 上。
-
-雖然大部份時候並不會直接這樣寫。
-
-```
-store.dispatch(sendMessage('Hello'));
-```
-						</script>
-					</section>
-					<section data-markdown>
-						<script type="text/template">
-## getState
-
-可以取得 store 現在的 state。
-
-```
-store.getState();
-```
-						</script>
-					</section>
+					<section>
+						<h2>Virtual DOM </h2>
+						<p>Spirit of your App </p>
+						<p>Rendering just a detail </p>
+					</section>	
 				</section>
 
 				<section data-transition="slide" data-background="#b5533c">
-					<section>
-						<h2>Middleware</h2>
-						<p>用來延伸 dispatch 的功能</p>
-					</section>
-					<section data-markdown>
-						<script type="text/template">
-可以使用 `applyMiddleware` util
-
-```
-import { createStore, applyMiddleware } from 'redux';
-
-const store =
-applyMiddleware(promise, thunk, observable)(createStore)(reducer);
-```
-						</script>
-					</section>
-					<section>
-						<p><code>dispatch => dispatch'</code></p>
-						<p>讓 dispatch 經過一個個的 middleware decorate</p>
-						<pre><code>
-const store =
-applyMiddleware(promise, thunk, observable)(createStore)(reducer);
-// store.dispatch => promise(thunk(observable(store.dispatch)));
-						</code></pre>
-					</section>
-					<section data-markdown>
-						<script type="text/template">
-[gaearon/redux-thunk](https://github.com/gaearon/redux-thunk) 這個 middleware
-
-可以讓 store dispatch thunk
-
-```
-function sendMessageAsync(message) {
-  return dispatch => {
-    setTimeout(() => {
-      dispatch(sendMessage(message));
-    }, 1000);
-  };
-}
-```
-						</script>
-					</section>
-					<section data-markdown>
-						<script type="text/template">
-[acdlite/redux-promise](https://github.com/acdlite/redux-promise) 這個 middleware
-
-可以讓 store dispatch promise
-
-```
-function sendMessageAsync(message) {
-  return dispatch => {
-      dispatch(new Promise((resolve, reject)) => {
-      	setTimeout(() => {
-        	resolve(sendMessage(message))
-      	}, 1000);
-      });
-  };
-}
-```
-						</script>
-					</section>
+					<h2>ECOSYSTEM </h2>
+					<p>React Router </p>
+					<p>Flux </p>
+					<p>Redux </p>
+					<p>Immutable </p>
+					<p>Relay / GraphQL </p>
 				</section>
 
 				<section data-transition="slide" data-background="#4d7e65">
-					<section>
-						<h2>View</h2>
-						<p>Redux 本身並不依賴特定 view layer，<br>所以可以跟任何 view layer 去結合</p>
-					</section>
-					<section>
-						<p><a href="https://github.com/gaearon/react-redux" target="_blank">react-redux</a> 就是 react 跟 redux 的介接</p>
-					</section>
-					<section>
-						<p>他提供兩個 component：</p>
-						<ul>
-							<li>Provider</li>
-							<li>Connector</li>
-						</ul>
-						<p>還有對應的 decorator：</p>
-						<ul>
-							<li>@provide</li>
-							<li>@connect</li>
-						</ul>
-					</section>
-					<section>
-						<p>不過...</p>
-						<img src="img/react-redux.png">
-					</section>
-				</section>
-
-
-				<section data-transition="slide" data-background="#b5533c">
-					<section>
-						<p>Provider</p>
-					</section>
-					<section data-markdown>
-						<script type="text/template">
-Provider 用來在 RootComponent 外再包一層，並把 store 用 react context 傳下去：
-
-```
-<Provider store={store}>
-  {() => <MyRootComponent>}
-</Provider>
-
-// 現在 child 需要是 function 是對 React 0.13 的 workaround
-```
-						</script>
-					</section>
+					
 				</section>
 
 				<section data-transition="slide" data-background="#4d7e65">
-					<section>
-						<p>connect (react-redux v0.2.2)</p>
-					</section>
-					<section data-markdown>
-						<script type="text/template">
-connect 用來把特定的 state 從 context 裡的 store select 出來，把 event listener 等等自動處理好，並把 dispatch 當 props 傳下去：
-
-```
-@connect(state => ({
-  user: state.user
-}))
-class MySmartComponent extends React.Component {
-
-	render() {
-    	const { dispatch, user } = this.props;
-		//..
-	}
-}
-```
-						</script>
-					</section>
-				</section>
-
-				<section data-transition="slide" data-background="#b5533c">
-					<section>
-						<p>bindActionCreators</p>
-						<p>Redux 還有一個可以方便去使用 ActionCreator 的 util</p>
-					</section>
-					<section data-markdown>
-						<script type="text/template">
-把 dispatch 包進去：
-
-```
-import { bindActionCreators } from 'redux';
-
-@connect(state => ({
-  user: state.user
-}))
-class MySmartComponent extends React.Component {
-
-	render() {
-    	const { dispatch, user } = this.props;
-    	const actions = bindActionCreators(UserActions, dispatch);
-		return (
-			<MyDumbComponent user={user} {...actions}>
-				{this.props.children}
-			</MyDumbComponent>
-		);
-	}
-}
-```
-						</script>
-					</section>
+					
 				</section>
 
 				<section data-transition="slide" data-background="#4d7e65">
-					<section>
-						<p>connect (react-redux v0.8.0)</p>
-					</section>
-					<section data-markdown>
-						<script type="text/template">
-v0.8.0 的 connect 不需要再寫一個 Component，
-
-只要把要傳怎樣的 props 給搞定，
-
-他會自動幫你包進 Connect Component
-
-```
-function mapStateToProps(state) {
-  return {
-    user: state.user
-  };
-}
-
-export default connect(mapStateToProps)(MyDumbComponent)
-```
-
-更簡單了！
-						</script>
-					</section>
-					<section data-markdown>
-						<script type="text/template">
-`connect` 現在有三個可選參數：`mapStateToProps`, `mapDispatchToProps`, `mergeProps`
-
-- mapStateToProps: 跟之前一樣，把 store state 的特定部分當成 props
-- mapDispatchToProps: 把 dispatch 傳進去也變成 props，通常用來把 actionCreators 傳下去
-- mergeProps: 可以指定 stateProps, dispatchProps, parentProps 的合併方式
-
-預設是這樣：
-
-```
-const defaultMergeProps = (stateProps, dispatchProps, parentProps) => ({
-  ...parentProps,
-  ...stateProps,
-  ...dispatchProps
-});
-```
-						</script>
-					</section>
-					<section data-markdown>
-						<script type="text/template">
-也傳遞包 dispatch 的 actionCreator props 下去：
-
-```
-function mapStateToProps(state) {
-  return {
-    user: state.user
-  };
-}
-
-function mapDispatchToProps(dispatch) {
-  return {
-    onSendMessage: () => dispatch(sendMessage())
-  };
-}
-
-export default connect(
-	mapStateToProps,
-	mapDispatchToProps
-)(MyDumbComponent)
-```
-						</script>
-					</section>
-					<section data-markdown>
-						<script type="text/template">
-最後一個：
-
-```
-
-function mergeProps(stateProps, dispatchProps, parentProps) {
-  return {
-	...stateProps,
-	...dispatchProps,
-	...parentProps
-  }
-}
-
-export default connect(
-	mapStateToProps,
-	mapDispatchToProps,
-	mergeProps
-)(MyDumbComponent)
-```
-
-這樣就可以讓 parentProps 蓋掉其他兩個
-						</script>
-					</section>
+					
 				</section>
 
 				<section data-transition="slide" data-background="#b5533c">
-					<section>
-						<p>v0.8.0 也可以 bindActionCreators</p>
-					</section>
-					<section data-markdown>
-						<script type="text/template">
-```
-function mapStateToProps(state) {
-  return {
-    user: state.user
-  };
-}
-
-function mapDispatchToProps(dispatch) {
-  return bindActionCreators(UserActions, dispatch);
-}
-
-export default connect(
-	mapStateToProps,
-	mapDispatchToProps
-)(MyDumbComponent)
-```
-
-跟以前用法幾乎一樣！
-						</script>
-					</section>
+					
 				</section>
 
 				<section data-transition="slide" data-background="#4d7e65" style="text-align: left;">
